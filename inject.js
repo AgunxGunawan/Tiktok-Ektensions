@@ -897,6 +897,12 @@
     }
     try {
       let url = typeof resource === 'string' ? resource : (resource instanceof Request ? resource.url : '');
+      if (url && config && config.body) {
+        const bodySize = config.body.size || config.body.byteLength || 0;
+        if (bodySize > 1024 * 1024) {
+          log(`[Debug Fetch] Upload biner ke URL: ${url} (${(bodySize/1024/1024).toFixed(2)} MB)`);
+        }
+      }
       if (url && (url.includes("tiktok.com") || url.includes("tiktokstudio.com") || url.includes("byteoversea") || url.includes("tiktokv.com") || url.includes("tiktokapis.com") || url.includes("ibytedtos.com") || url.includes("bytedance.com") || url.includes("bytegecko.com") || url.includes("tiktokw.com"))) {
         if (config && config.body) {
           // Ganti body dengan versi ter-patch jika sesuai
@@ -956,6 +962,12 @@
       return originalSend.apply(this, arguments);
     }
     try {
+      if (this._url && body) {
+        const bodySize = body.size || body.byteLength || 0;
+        if (bodySize > 1024 * 1024) {
+          log(`[Debug XHR] Upload biner ke URL: ${this._url} (${(bodySize/1024/1024).toFixed(2)} MB)`);
+        }
+      }
       if (this._url && (this._url.includes("tiktok.com") || this._url.includes("tiktokstudio.com") || this._url.includes("byteoversea") || this._url.includes("tiktokv.com") || this._url.includes("tiktokapis.com") || this._url.includes("ibytedtos.com") || this._url.includes("bytedance.com") || this._url.includes("bytegecko.com") || this._url.includes("tiktokw.com"))) {
         if (body) {
           // Ganti body dengan versi ter-patch secara sinkron
