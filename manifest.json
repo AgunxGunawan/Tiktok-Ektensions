@@ -1,0 +1,94 @@
+{
+  "manifest_version": 3,
+  "name": "TikTok High Quality Uploader",
+  "version": "1.2.0",
+  "description": "Mengoptimalkan dan menjaga kualitas upload video TikTok di mobile browser dengan memodifikasi request header, bypass kompresi otomatis, dan log aktivitas real-time.",
+  "permissions": [
+    "declarativeNetRequest",
+    "scripting",
+    "storage"
+  ],
+  "host_permissions": [
+    "http://*.tiktok.com/*",
+    "https://*.tiktok.com/*",
+    "http://*.tiktokstudio.com/*",
+    "https://*.tiktokstudio.com/*",
+    "http://*.byteoversea.com/*",
+    "https://*.byteoversea.com/*",
+    "http://*.byteoversea.net/*",
+    "https://*.byteoversea.net/*",
+    "http://*.ibyteimg.com/*",
+    "https://*.ibyteimg.com/*",
+    "http://*.tiktokv.com/*",
+    "https://*.tiktokv.com/*",
+    "http://*.tiktokapis.com/*",
+    "https://*.tiktokapis.com/*",
+    "http://*.ibytedtos.com/*",
+    "https://*.ibytedtos.com/*",
+    "http://*.bytedance.com/*",
+    "https://*.bytedance.com/*",
+    "http://*.bytegecko.com/*",
+    "https://*.bytegecko.com/*",
+    "http://*.tiktokw.com/*",
+    "https://*.tiktokw.com/*"
+  ],
+  "declarative_net_request": {
+    "rule_resources": [
+      {
+        "id": "ruleset_tiktok_upload",
+        "enabled": true,
+        "path": "rules.json"
+      }
+    ]
+  },
+  "background": {
+    "service_worker": "background.js"
+  },
+  "action": {
+    "default_popup": "popup.html",
+    "default_title": "TikTok HQ Uploader"
+  },
+  "content_scripts": [
+    {
+      "matches": [
+        "http://*.tiktok.com/*",
+        "https://*.tiktok.com/*",
+        "http://*.tiktokstudio.com/*",
+        "https://*.tiktokstudio.com/*"
+      ],
+      "js": [
+        "inject.js"
+      ],
+      "run_at": "document_start",
+      "all_frames": true,
+      "world": "MAIN"
+    },
+    {
+      "matches": [
+        "http://*.tiktok.com/*",
+        "https://*.tiktok.com/*",
+        "http://*.tiktokstudio.com/*",
+        "https://*.tiktokstudio.com/*"
+      ],
+      "js": [
+        "content.js"
+      ],
+      "run_at": "document_start",
+      "all_frames": true,
+      "world": "ISOLATED"
+    }
+  ],
+  "web_accessible_resources": [
+    {
+      "resources": [
+        "inject.js"
+      ],
+      "matches": [
+        "http://*.tiktok.com/*",
+        "https://*.tiktok.com/*",
+        "http://*.tiktokstudio.com/*",
+        "https://*.tiktokstudio.com/*"
+      ]
+    }
+  ]
+}

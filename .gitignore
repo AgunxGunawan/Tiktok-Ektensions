@@ -1,0 +1,16 @@
+# System files
+.DS_Store
+Thumbs.db
+
+# Workspace / IDE settings
+.vscode/
+.idea/
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.swp
+
+# Geminis / AI logs
+.gemini/
+*state.json

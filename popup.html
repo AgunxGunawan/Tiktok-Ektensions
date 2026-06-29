@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>TikTok HQ Uploader Settings</title>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="popup.css">
+</head>
+<body>
+  <div class="card">
+    <!-- Header -->
+    <div class="header">
+      <div class="logo-area">
+        <div class="logo-icon">HQ</div>
+        <div>
+          <h1>TikTok Uploader</h1>
+          <p class="subtitle">Bypass Compression MV3</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Status Area -->
+    <div class="status-box">
+      <span class="status-label">Status Ekstensi:</span>
+      <div class="status-value" id="status-container">
+        <span class="pulse-dot" id="status-dot"></span>
+        <span class="status-text" id="status-text">Memuat...</span>
+      </div>
+    </div>
+
+    <!-- Control Switches -->
+    <div class="control-container">
+      <div class="control-group">
+        <div class="control-info">
+          <span class="control-title">Bypass Kompresi</span>
+          <span class="control-desc">Unggah video asli tanpa kompresi browser.</span>
+        </div>
+        <label class="switch">
+          <input type="checkbox" id="bypass-toggle" checked>
+          <span class="slider round"></span>
+        </label>
+      </div>
+
+      <div class="control-group">
+        <div class="control-info">
+          <span class="control-title">Auto-HD & API Injector</span>
+          <span class="control-desc">Aktifkan HD otomatis & suntik parameter.</span>
+        </div>
+        <label class="switch">
+          <input type="checkbox" id="autohd-toggle" checked>
+          <span class="slider round"></span>
+        </label>
+      </div>
+
+      <div class="control-group">
+        <div class="control-info">
+          <span class="control-title">User-Agent Desktop</span>
+          <span class="control-desc">Samarkan sebagai PC (bypass deteksi HP).</span>
+        </div>
+        <label class="switch">
+          <input type="checkbox" id="ua-toggle" checked>
+          <span class="slider round"></span>
+        </label>
+      </div>
+
+      <div class="control-group">
+        <div class="control-info">
+          <span class="control-title">Patcher 120 FPS (Timescale)</span>
+          <span class="control-desc">Patch metadata timing (60fps/120fps bypass).</span>
+        </div>
+        <label class="switch">
+          <input type="checkbox" id="patcher-toggle">
+          <span class="slider round"></span>
+        </label>
+      </div>
+
+      <div class="patcher-settings hidden" id="patcher-settings-panel">
+        <div class="setting-row">
+          <label for="patcher-method">Metode Patch:</label>
+          <select id="patcher-method" class="custom-select">
+            <option value="extension-signal">TikTok Web Signal (Recommended)</option>
+            <option value="balanced-sync">Balanced Sync (Fallback)</option>
+            <option value="classic-force">Classic Force (Legacy)</option>
+          </select>
+        </div>
+        <div class="setting-row">
+          <label for="patcher-multiplier">Multiplier:</label>
+          <select id="patcher-multiplier" class="custom-select">
+            <option value="auto">Auto (Berdasarkan FPS)</option>
+            <option value="2">2x</option>
+            <option value="3">3x</option>
+            <option value="4">4x</option>
+          </select>
+        </div>
+      </div>
+    </div>
+
+    <!-- Captured Video Stats -->
+    <div class="section-title">Video Terakhir Terdeteksi</div>
+    <div class="stats-card" id="no-video-alert">
+      Belum ada video terdeteksi. Silakan pilih atau drop video di uploader TikTok.
+    </div>
+    
+    <div class="stats-card hidden" id="video-stats-card">
+      <div class="stat-row">
+        <span class="stat-name">Nama File</span>
+        <span class="stat-val truncate" id="stat-name">-</span>
+      </div>
+      <div class="stat-row">
+        <span class="stat-name">Ukuran</span>
+        <span class="stat-val" id="stat-size">-</span>
+      </div>
+      <div class="stat-row">
+        <span class="stat-name">Codec Deteksi</span>
+        <span class="stat-val badge" id="stat-codec">-</span>
+      </div>
+      <div class="stat-row">
+        <span class="stat-name">Bitrate</span>
+        <span class="stat-val" id="stat-bitrate">-</span>
+      </div>
+      <div class="stat-row border-top">
+        <span class="stat-name">Status Bypass</span>
+        <span class="stat-val success-text" id="stat-bypass">AKTIF (Original)</span>
+      </div>
+    </div>
+
+    <!-- Real-time console logs -->
+    <div class="logs-section">
+      <div class="section-header-row">
+        <span class="section-title">Log Aktivitas Real-time</span>
+        <button id="clear-logs-btn" class="clear-btn" title="Bersihkan Log">
+          <svg viewBox="0 0 24 24" width="12" height="12" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path></svg>
+        </button>
+      </div>
+      <div class="console-box" id="console-logs">
+        <div class="log-line empty">Menunggu aktivitas uploader...</div>
+      </div>
+    </div>
+
+    <!-- Footer -->
+    <div class="footer">
+      <span>iQOO 15R Optimized Edition</span>
+      <span>v1.2.0</span>
+    </div>
+  </div>
+
+  <script src="popup.js"></script>
+</body>
+</html>
