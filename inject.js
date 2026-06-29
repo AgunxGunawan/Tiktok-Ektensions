@@ -159,6 +159,25 @@
       Object.defineProperty(navigator, 'maxTouchPoints', { get: () => 0, configurable: true });
       Object.defineProperty(navigator, 'hardwareConcurrency', { get: () => 16, configurable: true });
       Object.defineProperty(navigator, 'deviceMemory', { get: () => 8, configurable: true });
+      Object.defineProperty(window, 'devicePixelRatio', { get: () => 1, configurable: true });
+
+      // Spoof Network Connection (Mencegah deteksi jaringan seluler/cellular)
+      try {
+        if (navigator.connection) {
+          const mockedConnection = {
+            downlink: 10,
+            effectiveType: '4g',
+            rtt: 50,
+            saveData: false,
+            type: 'wifi',
+            onchange: null,
+            addEventListener: function () { },
+            removeEventListener: function () { },
+            dispatchEvent: function () { return true; }
+          };
+          Object.defineProperty(navigator, 'connection', { get: () => mockedConnection, configurable: true });
+        }
+      } catch (e) { }
 
       Object.defineProperty(window.screen, 'width', { get: () => 1920, configurable: true });
       Object.defineProperty(window.screen, 'height', { get: () => 1080, configurable: true });

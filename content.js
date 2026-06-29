@@ -3,23 +3,31 @@
 
 console.log("TikTok High Quality Uploader: Content script (ISOLATED) aktif.");
 
-// 0. Injeksi inject.js ke dalam MAIN world secara dinamis untuk kompatibilitas penuh (seperti Lemur Browser)
-function injectMainScript() {
+// 0. Injeksi inject.js ke dalam MAIN world secara SINKRON untuk kompatibilitas penuh (anti-delay di Lemur/Kiwi Browser)
+function injectMainScriptSync() {
   const scriptId = "tiktok-hq-uploader-injector";
   if (document.getElementById(scriptId)) return;
 
   try {
-    const script = document.createElement("script");
-    script.id = scriptId;
-    script.src = chrome.runtime.getURL("inject.js");
-    script.async = false;
-    (document.head || document.documentElement).appendChild(script);
-    console.log("TikTok HQ Content: Berhasil menginjeksi inject.js ke MAIN world.");
+    const xhr = new XMLHttpRequest();
+    // Membaca file secara sinkron (false) dari lokal ekstensi
+    xhr.open("GET", chrome.runtime.getURL("inject.js"), false);
+    xhr.send();
+    
+    if (xhr.status === 200 || xhr.status === 0) {
+      const script = document.createElement("script");
+      script.id = scriptId;
+      script.textContent = xhr.responseText;
+      (document.head || document.documentElement).appendChild(script);
+      console.log("TikTok HQ Content: Berhasil menginjeksi inject.js secara SINKRON.");
+    } else {
+      console.error("TikTok HQ Content: Gagal memuat inject.js, status:", xhr.status);
+    }
   } catch (e) {
-    console.error("TikTok HQ Content: Gagal menginjeksi inject.js:", e);
+    console.error("TikTok HQ Content: Gagal melakukan sinkronisasi inject.js:", e);
   }
 }
-injectMainScript();
+injectMainScriptSync();
 
 // 1. Catat inisialisasi awal ke logs storage
 chrome.storage.local.get({ logs: [] }, (data) => {
