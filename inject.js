@@ -584,6 +584,7 @@
             window.__patchedVideoArrayBuffer = result.bytes.buffer;
 
             const patchedFile = new File([result.bytes], file.name, { type: file.type || 'video/mp4', lastModified: file.lastModified });
+            window.__patchedVideoFile = patchedFile; // Simpan objek berkas ter-patch ke global cache
             log(`[Timescale Patcher] Sukses! Video berhasil di-patch (${divider}x). Ukuran akhir: ${(patchedBlob.size / (1024 * 1024)).toFixed(2)} MB`);
             
             if (currentSettings.autoHDToggle) {
@@ -656,6 +657,46 @@
     log("[Blob Patcher] Blob.prototype.slice hijacker berhasil aktif.");
   } catch (e) {
     log("Gagal menyuntikkan hijack Blob.slice: " + e.message);
+  }
+
+  try {
+    if (window.DataTransferItem) {
+      const originalGetAsFile = DataTransferItem.prototype.getAsFile;
+      DataTransferItem.prototype.getAsFile = function () {
+        const file = originalGetAsFile.apply(this, arguments);
+        if (currentSettings.enablePatcher && file && file.type.startsWith('video/')) {
+          if (window.__patchedVideoFile && window.__patchedVideoFile.name === file.name) {
+            log("[API Hijack] DataTransferItem.getAsFile(): Mengembalikan berkas ter-patch dari cache.");
+            return window.__patchedVideoFile;
+          }
+        }
+        return file;
+      };
+      log("[API Hijack] DataTransferItem.getAsFile hijacker berhasil aktif.");
+    }
+  } catch (e) {
+    log("Gagal menyuntikkan hijack DataTransferItem.getAsFile: " + e.message);
+  }
+
+  try {
+    if (window.FileSystemFileEntry) {
+      const originalFileEntryFile = FileSystemFileEntry.prototype.file;
+      FileSystemFileEntry.prototype.file = function (successCallback, errorCallback) {
+        const self = this;
+        originalFileEntryFile.call(this, async function (file) {
+          if (currentSettings.enablePatcher && file && file.type.startsWith('video/')) {
+            log("[API Hijack] FileSystemFileEntry.file(): Mendeteksi berkas video -> " + file.name + ". Memulai patch...");
+            const patchedFile = await handleSelectedVideo(file);
+            successCallback(patchedFile);
+          } else {
+            successCallback(file);
+          }
+        }, errorCallback);
+      };
+      log("[API Hijack] FileSystemFileEntry.file hijacker berhasil aktif.");
+    }
+  } catch (e) {
+    log("Gagal menyuntikkan hijack FileSystemFileEntry.file: " + e.message);
   }
 
 
